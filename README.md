@@ -1,56 +1,40 @@
-# Welcome to your Expo app 👋
+# Chatty
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Chatty est une application Expo/React Native permettant de discuter avec un assistant IA depuis un écran unique.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Installation
 
 ```bash
-npm run reset-project
+npm install
+npm start
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+Ouvre l’application dans Expo Go, un émulateur Android, un simulateur iOS ou ton navigateur.
 
-### Other setup steps
+## Mode mock
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Le mode mock est actif par défaut. Il ne nécessite aucune clé API et simule une réponse après un court délai.
 
-## Learn more
+## Mode API
 
-To learn more about developing your project with Expo, look at the following resources:
+Crée un fichier `.env.local` à la racine :
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```env
+EXPO_PUBLIC_AI_MODE=api
+EXPO_PUBLIC_AI_API_URL=https://api.openai.com/v1/chat/completions
+EXPO_PUBLIC_AI_API_KEY=ta_clef_locale
+EXPO_PUBLIC_AI_MODEL=gpt-4o-mini
+```
 
-## Join the community
+Puis relance Expo. L’intégration utilise une API compatible avec le format chat OpenAI via `fetch`.
 
-Join our community of developers creating universal apps.
+Les variables `EXPO_PUBLIC_*` sont incluses dans le bundle JavaScript. Ne mets pas de secret réservé à un serveur dans cette application. Pour une utilisation réelle, passe l’appel IA par une API backend servant de proxy.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Commandes
+
+- `npm start` : lance le serveur Expo.
+- `npm run android` : lance Android.
+- `npm run ios` : lance iOS.
+- `npm run web` : lance la version web.
+- `npm run lint` : lance ESLint.
+- `npx tsc --noEmit` : vérifie les types.
