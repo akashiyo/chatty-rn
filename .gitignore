@@ -47,3 +47,4 @@ example
 #vscode and claude
 .vscode
 .claude
+.github/copilot-instructions.md
