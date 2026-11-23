@@ -25,7 +25,9 @@ export async function sendChatMessage(
   history: ChatMessage[],
   userMessage: string
 ): Promise<string> {
-  const mode = process.env.EXPO_PUBLIC_AI_MODE ?? 'mock';
+  const apiKey = process.env.EXPO_PUBLIC_AI_API_KEY;
+  const mode =
+    process.env.EXPO_PUBLIC_AI_MODE ?? (apiKey ? 'api' : 'mock');
 
   if (mode !== 'api') {
     await wait(700);
@@ -34,9 +36,9 @@ export async function sendChatMessage(
 
   const apiUrl =
     process.env.EXPO_PUBLIC_AI_API_URL ??
-    'https://api.openai.com/v1/chat/completions';
-  const apiKey = process.env.EXPO_PUBLIC_AI_API_KEY;
-  const model = process.env.EXPO_PUBLIC_AI_MODEL ?? 'gpt-4o-mini';
+    'https://api.groq.com/openai/v1/chat/completions';
+  const model =
+    process.env.EXPO_PUBLIC_AI_MODEL ?? 'openai/gpt-oss-20b';
 
   if (!apiKey) {
     throw new Error(
@@ -67,13 +69,25 @@ export async function sendChatMessage(
   }
 
   if (!response.ok) {
+    let detail = '';
+    try {
+      const errorBody = (await response.json()) as {
+        error?: { message?: string };
+      };
+      detail = errorBody.error?.message ?? '';
+    } catch {
+      detail = '';
+    }
+
     if (response.status === 401) {
       throw new Error('Clé API invalide.');
     }
     if (response.status === 429) {
       throw new Error('Quota dépassé ou trop de requêtes. Réessaie plus tard.');
     }
-    throw new Error(`Le service IA a retourné une erreur (${response.status}).`);
+    throw new Error(
+      `Le service IA a retourné une erreur (${response.status})${detail ? ` : ${detail}` : '.'}`
+    );
   }
 
   const data = (await response.json()) as {

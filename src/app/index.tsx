@@ -1,32 +1,32 @@
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   View,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { ChatHeader } from '@/components/chat-header';
-import { ChatInput } from '@/components/chat-input';
-import { ErrorBanner } from '@/components/error-banner';
-import { LoadingBubble } from '@/components/loading-bubble';
-import { MessageBubble } from '@/components/message-bubble';
-import { sendChatMessage } from '@/services/ai';
-import type { ChatMessage } from '@/types/chat';
+import { ChatHeader } from "@/components/chat-header";
+import { ChatInput } from "@/components/chat-input";
+import { ErrorBanner } from "@/components/error-banner";
+import { LoadingBubble } from "@/components/loading-bubble";
+import { MessageBubble } from "@/components/message-bubble";
+import { sendChatMessage } from "@/services/ai";
+import type { ChatMessage } from "@/types/chat";
 
 const INITIAL_MESSAGE: ChatMessage = {
-  id: 'welcome',
-  role: 'assistant',
-  content: 'Bonjour ! Je suis ton assistant IA. Comment puis-je t’aider ?',
+  id: "welcome",
+  role: "assistant",
+  content: "Bonjour ! Je suis ton assistant IA. Comment puis-je t’aider ?",
 };
 
 export default function HomeScreen() {
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_MESSAGE]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [lastRequest, setLastRequest] = useState('');
+  const [lastRequest, setLastRequest] = useState("");
   const listRef = useRef<FlatList<ChatMessage>>(null);
 
   const scrollToLatest = () => {
@@ -44,7 +44,7 @@ export default function HomeScreen() {
     if (!isRetry) {
       setMessages((current) => [
         ...current,
-        { id: `user-${Date.now()}`, role: 'user', content: trimmedText },
+        { id: `user-${Date.now()}`, role: "user", content: trimmedText },
       ]);
     }
 
@@ -54,21 +54,21 @@ export default function HomeScreen() {
             (message, index) =>
               !(
                 index === messages.length - 1 &&
-                message.role === 'user' &&
+                message.role === "user" &&
                 message.content === trimmedText
-              )
+              ),
           )
         : messages;
       const reply = await sendChatMessage(history, trimmedText);
       setMessages((current) => [
         ...current,
-        { id: `assistant-${Date.now()}`, role: 'assistant', content: reply },
+        { id: `assistant-${Date.now()}`, role: "assistant", content: reply },
       ]);
     } catch (caughtError) {
       setError(
         caughtError instanceof Error
           ? caughtError.message
-          : 'Une erreur inattendue est survenue.'
+          : "Une erreur inattendue est survenue.",
       );
     } finally {
       setIsLoading(false);
@@ -78,16 +78,16 @@ export default function HomeScreen() {
   const startNewConversation = () => {
     setMessages([INITIAL_MESSAGE]);
     setError(null);
-    setLastRequest('');
+    setLastRequest("");
   };
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
       <ChatHeader onNewChat={startNewConversation} />
       <KeyboardAvoidingView
         style={styles.keyboardView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 8 : 0}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 8 : 0}
       >
         <FlatList
           ref={listRef}
@@ -123,7 +123,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F7F3FC',
+    backgroundColor: "#F7F3FC",
   },
   keyboardView: {
     flex: 1,
@@ -137,6 +137,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: 8,
     paddingBottom: 8,
-    backgroundColor: '#F7F3FC',
+    backgroundColor: "#F7F3FC",
   },
 });

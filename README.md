@@ -21,12 +21,18 @@ Crée un fichier `.env.local` à la racine :
 
 ```env
 EXPO_PUBLIC_AI_MODE=api
-EXPO_PUBLIC_AI_API_URL=https://api.openai.com/v1/chat/completions
+EXPO_PUBLIC_AI_API_URL=https://api.groq.com/openai/v1/chat/completions
 EXPO_PUBLIC_AI_API_KEY=ta_clef_locale
-EXPO_PUBLIC_AI_MODEL=gpt-4o-mini
+EXPO_PUBLIC_AI_MODEL=openai/gpt-oss-20b
 ```
 
 Puis relance Expo. L’intégration utilise une API compatible avec le format chat OpenAI via `fetch`.
+
+Redémarre Expo avec le cache vidé après toute modification du fichier `.env` :
+
+```bash
+npx expo start --clear
+```
 
 Les variables `EXPO_PUBLIC_*` sont incluses dans le bundle JavaScript. Ne mets pas de secret réservé à un serveur dans cette application. Pour une utilisation réelle, passe l’appel IA par une API backend servant de proxy.
 
